@@ -42,6 +42,7 @@ namespace ShipManagementApi.Services.Impl
                     Name = ship.Name,
                     Length = ship.Length,
                     Width = ship.Width,
+                    ShipType = ShipType.PassengerShip,
                     Passengers = ship.Passengers
                         .Select(p => new PassengerShipDto.PassengerDto
                         {
@@ -64,6 +65,7 @@ namespace ShipManagementApi.Services.Impl
                     Name = ship.Name,
                     Length = ship.Length,
                     Width = ship.Width,
+                    ShipType = ShipType.TankerShip,
                     FuelTanks = ship.FuelTanks
                         .Select(ft => new TankerShipDto.FuelTankDto
                         {
@@ -170,7 +172,7 @@ namespace ShipManagementApi.Services.Impl
             return true;
         }
 
-        public async Task<bool> FillFuelTank(string imoNumber, int fuelTankId, FuelType fuelType, double fuelAmount)
+        public async Task<bool> FillFuelTank(string imoNumber, int fuelTankId, FuelDto fuelDto)
         {
             Ship? ship = await shipRepository.FindShip(imoNumber);
 
@@ -182,14 +184,14 @@ namespace ShipManagementApi.Services.Impl
             FuelTank? tank = tankerShip.FuelTanks.FirstOrDefault(t => t.Id == fuelTankId);
 
             if (tank == null 
-                || (tank.CurrentFuelType != fuelType && tank.CurrentFuelAmount > 0)
-                || (tank.CurrentFuelAmount + fuelAmount > tank.FuelCapacity))
+                || (tank.CurrentFuelType != fuelDto.fuelType && tank.CurrentFuelAmount > 0)
+                || (tank.CurrentFuelAmount + fuelDto.fuelAmount > tank.FuelCapacity))
             {
                 return false;
             }
 
-            tank.CurrentFuelType = fuelType;
-            tank.CurrentFuelAmount += fuelAmount;
+            tank.CurrentFuelType = fuelDto.fuelType;
+            tank.CurrentFuelAmount += fuelDto.fuelAmount;
 
             await shipRepository.Update(tankerShip);
             return true;
@@ -212,6 +214,7 @@ namespace ShipManagementApi.Services.Impl
             }
 
             tank.CurrentFuelAmount = 0;
+            tank.CurrentFuelType = null;
             await shipRepository.Update(tankerShip);
             return true;
         }
@@ -220,7 +223,7 @@ namespace ShipManagementApi.Services.Impl
         {
             if (imoNumber.Length != 7 || (shipRepository.FindAllShips().Result.Find(ship => ship.ImoNumber == imoNumber)) != null)
             {
-                // imo too long/short or not unique
+                // imo number too long/short or not unique
                 return false;
             }
 

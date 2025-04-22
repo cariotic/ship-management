@@ -13,7 +13,7 @@ namespace ShipManagementApi.Services.Api
         public Task<List<TankerShipDto>> GetAllTankerShips();
         public Task<bool> AddPassengerToShip(string imoNumber, PassengerShipDto.PassengerDto passengerDto);
         public Task<bool> RemovePassengerFromShip(string imoNumber, int passengerId);
-        public Task<bool> FillFuelTank(string imoNumber, int fuelTankId, FuelType fuelType, double fuelAmount);
+        public Task<bool> FillFuelTank(string imoNumber, int fuelTankId, FuelDto fuelDto);
         public Task<bool> EmptyFuelTank(string imoNumber, int fuelTankId);
     }
 }

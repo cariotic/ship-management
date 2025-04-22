@@ -1,0 +1,168 @@
+### Add a passenger ship
+POST http://localhost:8080/api/ships/passenger
+Content-Type: application/json
+
+{
+  "ImoNumber": "9074729",
+  "Name": "Voyager",
+  "Length": 300,
+  "Width": 50,
+  "ShipType": "PassengerShip",
+  "Passengers": [
+    {
+      "Id": 1,
+      "FirstName": "Alice",
+      "LastName": "Johnson"
+    },
+    {
+      "Id": 2,
+      "FirstName": "Bob",
+      "LastName": "Smith"
+    }
+  ]
+}
+
+### Add a tanker ship
+POST http://localhost:8080/api/ships/tanker
+Content-Type: application/json
+
+{
+  "ImoNumber": "9176187",
+  "Name": "Liberty",
+  "Length": 250,
+  "Width": 50,
+  "ShipType": "TankerShip",
+  "FuelTanks": [
+    {
+      "Id": 1,
+      "FuelCapacity": 250000,
+      "CurrentFuelAmount": 0
+    },
+    {
+      "Id": 2,
+      "FuelCapacity": 300000,
+      "CurrentFuelAmount": 5000,
+      "CurrentFuelType": "HeavyFuel"
+    }
+  ]
+}
+
+### Retrieve all ships
+GET http://localhost:8080/api/ships
+
+### Add a passenger to a passenger ship
+POST http://localhost:8080/api/ships/9074729/passengers
+Content-Type: application/json
+
+{
+  "Id": 3,
+  "FirstName": "Jane",
+  "LastName": "Doe"
+}
+
+### Retrieve all passenger ships
+GET http://localhost:8080/api/ships/passenger
+
+### Remove a passenger from a ship
+DELETE http://localhost:8080/api/ships/9074729/passengers/1
+
+### Fill a fuel tank
+PATCH http://localhost:8080/api/ships/9176187/tanks/1/fill
+Content-Type: application/json
+
+{
+  "fuelType": "Diesel",
+  "fuelAmount": 2000.5
+}
+
+### Retrieve all tanker ships
+GET http://localhost:8080/api/ships/tanker
+
+### Empty a fuel tank
+PATCH http://localhost:8080/api/ships/9176187/tanks/2/empty
+
+### Retrieve all tanker ships
+GET http://localhost:8080/api/ships/tanker
+
+
+### REJECTED REQUESTS
+
+### Add a ship with negative length
+POST http://localhost:8080/api/ships/passenger
+Content-Type: application/json
+
+{
+  "ImoNumber": "1000021",
+  "Name": "Voyager II",
+  "Length": -300,
+  "Width": 50,
+  "ShipType": "PassengerShip",
+  "Passengers": [
+    {
+      "Id": 1,
+      "FirstName": "Alice",
+      "LastName": "Johnson"
+    },
+    {
+      "Id": 2,
+      "FirstName": "Bob",
+      "LastName": "Smith"
+    }
+  ]
+}
+
+### Add a ship with invalid IMO number
+POST http://localhost:8080/api/ships/passenger
+Content-Type: application/json
+
+{
+  "ImoNumber": "0000001",
+  "Name": "Voyager II",
+  "Length": 300,
+  "Width": 50,
+  "ShipType": "PassengerShip",
+  "Passengers": [
+    {
+      "Id": 4,
+      "FirstName": "Jane",
+      "LastName": "Johnson"
+    }
+  ]
+}
+
+### Add a ship with duplicate IMO number
+POST http://localhost:8080/api/ships/passenger
+Content-Type: application/json
+
+{
+  "ImoNumber": "9074729",
+  "Name": "Voyager II",
+  "Length": 300,
+  "Width": 50,
+  "ShipType": "PassengerShip",
+  "Passengers": [
+    {
+      "Id": 4,
+      "FirstName": "Jane",
+      "LastName": "Johnson"
+    }
+  ]
+}
+
+### Fill a fuel tank with wrong fuel type
+PATCH http://localhost:8080/api/ships/9176187/tanks/1/fill
+Content-Type: application/json
+
+{
+  "fuelType": "HeavyFuel",
+  "fuelAmount": 100
+}
+
+### Fill a fuel tank with too much fuel
+PATCH http://localhost:8080/api/ships/9176187/tanks/1/fill
+Content-Type: application/json
+
+{
+  "fuelType": "Diesel",
+  "fuelAmount": 1000000
+}

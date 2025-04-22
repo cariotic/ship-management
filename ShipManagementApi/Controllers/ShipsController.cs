@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShipManagementApi.Dtos;
+using ShipManagementApi.DTOs;
 using ShipManagementApi.Models;
 using ShipManagementApi.Services.Api;
 
@@ -20,6 +21,18 @@ namespace ShipManagementApi.Controllers
         public async Task<IActionResult> GetAllShips()
         {
             return Ok(await shipService.GetAllShips());
+        }
+
+        [HttpGet("passenger")]
+        public async Task<IActionResult> GetAllPassengerShips()
+        {
+            return Ok(await shipService.GetAllPassengerShips());
+        }
+
+        [HttpGet("tanker")]
+        public async Task<IActionResult> GetAllTankerShips()
+        {
+            return Ok(await shipService.GetAllTankerShips());
         }
 
         [HttpPost("passenger")]
@@ -71,10 +84,10 @@ namespace ShipManagementApi.Controllers
             }
         }
 
-        [HttpPost("{imoNumber}/tanks/{fuelTankId}/fill")]
-        public async Task<IActionResult> FillFuelTank(string imoNumber, int fuelTankId, FuelType fuelType, double fuelAmount)
+        [HttpPatch("{imoNumber}/tanks/{fuelTankId}/fill")]
+        public async Task<IActionResult> FillFuelTank(string imoNumber, int fuelTankId, [FromBody]FuelDto fuelDto)
         {
-            bool result = await shipService.FillFuelTank(imoNumber, fuelTankId, fuelType, fuelAmount);
+            bool result = await shipService.FillFuelTank(imoNumber, fuelTankId, fuelDto);
 
             if (result == true)
             {
