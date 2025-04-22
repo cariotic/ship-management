@@ -81,9 +81,6 @@ GET http://localhost:8080/api/ships/tanker
 ### Empty a fuel tank
 PATCH http://localhost:8080/api/ships/9176187/tanks/2/empty
 
-### Retrieve all tanker ships
-GET http://localhost:8080/api/ships/tanker
-
 
 ### REJECTED REQUESTS
 
@@ -166,3 +163,15 @@ Content-Type: application/json
   "fuelType": "Diesel",
   "fuelAmount": 1000000
 }
+
+### Fill a nonexistent fuel tank
+PATCH http://localhost:8080/api/ships/9176187/tanks/10/fill
+Content-Type: application/json
+
+{
+  "fuelType": "Diesel",
+  "fuelAmount": 100
+}
+
+### Remove a nonexistent passenger from a ship
+DELETE http://localhost:8080/api/ships/9074729/passengers/10
